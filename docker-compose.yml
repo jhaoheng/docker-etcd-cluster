@@ -1,0 +1,35 @@
+version: "3.5"
+services: 
+  dns_discovery:
+    image: orbweb/etcd_dns_discovery:1.0
+    container_name: dns_discovery
+    hostname: etcd.discovery
+    cap_add:
+      - ALL # need NET_ADMIN
+    ports:
+      - 8080:8080
+    # volumes:
+    #   - ./dnsmasq-conf/confs:/home/dnsmasq/confs
+    #   - ./dnsmasq-conf/hosts:/home/dnsmasq/hosts
+    working_dir: /root/go/src/whisper
+    networks:
+      - etcd_network
+
+  etcd:
+    image: orbweb/etcd:3.3.9-ubuntu16.04
+    container_name: master_etcd
+    depends_on:
+      - dns_discovery
+    ports:
+      - 2379:2379
+      - 2380:2380
+    depends_on:
+      - dns_discovery
+    networks:
+      - etcd_network  
+    command: /bin/sh
+    tty: true  
+
+networks:
+  etcd_network:
+    name: etcd_network

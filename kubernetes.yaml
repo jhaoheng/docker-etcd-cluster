@@ -1,0 +1,24 @@
+apiVersino: apps/v1
+kind: Deployment
+metadata:
+  name: dns-discovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-discovery-deployment
+  template:
+    metadata:
+      labels:
+        app: dns-discovery-deployment
+    spec:
+      containers:
+      - name: dnsmasq
+        image: orbweb/dnsmasq:2.75
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+            drop:
+            - KILL
+---
