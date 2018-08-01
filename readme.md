@@ -14,4 +14,3 @@
 
 ![docker](./assets/docker-compose.png)
 
-# kubernetes, 本地 : 測試

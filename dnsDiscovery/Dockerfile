@@ -20,6 +20,7 @@ RUN         ln -s /usr/local/go/bin/* /bin && \
 COPY        ./whisper /root/go/src/whisper
 RUN         chmod -R +x /root/go/src/whisper
 EXPOSE      8080/tcp
+WORKDIR     /root/go/src/whisper
 
 COPY        ./entrypoint.sh /
 RUN         chmod +x /entrypoint.sh

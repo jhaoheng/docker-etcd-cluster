@@ -8,10 +8,6 @@ services:
       - ALL # need NET_ADMIN
     ports:
       - 8080:8080
-    # volumes:
-    #   - ./dnsmasq-conf/confs:/home/dnsmasq/confs
-    #   - ./dnsmasq-conf/hosts:/home/dnsmasq/hosts
-    working_dir: /root/go/src/whisper
     networks:
       - etcd_network
 
@@ -33,3 +29,4 @@ services:
 networks:
   etcd_network:
     name: etcd_network
+

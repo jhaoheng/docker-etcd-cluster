@@ -1,4 +1,4 @@
-apiVersino: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dns-discovery
@@ -12,13 +12,51 @@ spec:
       labels:
         app: dns-discovery-deployment
     spec:
+      hostname: etcd.discovery
       containers:
       - name: dnsmasq
-        image: orbweb/dnsmasq:2.75
+        image: orbweb/etcd_dns_discovery:1.0
+        ports:
+        - name: whisper_port
+          containerPort: 8080
         securityContext:
           capabilities:
             add:
             - NET_ADMIN
             drop:
             - KILL
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: service
+# spec:
+#   ports:
+#     - port: 8080
+#       targetPort: 8080
+#   selector:
+#     app: dns-discovery-deployment
+#   type: LoadBalancer
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etcd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etcd-deployment
+  template:
+    metadata:
+      labels:
+        app: etcd-deployment
+    spec:
+      containers:
+      - name: etcd
+        image: orbweb/etcd:3.3.9-ubuntu16.04
+        ports:
+        - name: etcd_client_port
+          containerPort: 2379
+        - name: etcd_server_port
+          containerPort: 2380
